@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.8"
 
 services:
   # MySQL
@@ -34,7 +34,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./code:/usr/src/server
+      - ./app:/worder/app
     networks:
       - local-net
 

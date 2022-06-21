@@ -7,9 +7,11 @@ CREATE TABLE user (
 
 CREATE TABLE menus (
     id INT NOT NULL AUTO_INCREMENT,
-    food VARCHAR(30) NOT NULL,
+    category_id INT,
+    menu VARCHAR(30) NOT NULL,
     price INT,
-    visible_flg TINYINT,
+    view_no INT,
+    visible_st TINYINT,
     created_at DATETIME,
     updated_at DATETIME,
     PRIMARY KEY (id)
@@ -18,9 +20,18 @@ CREATE TABLE menus (
 CREATE TABLE orders (
     id INT NOT NULL AUTO_INCREMENT,
     menu_id INT,
+    price INT,
     seat VARCHAR(6) NOT NULL,
-    delivery_flg TINYINT,
-    bill_flg TINYINT,
+    order_st TINYINT,
+    bill_st TINYINT,
+    created_at DATETIME,
+    updated_at DATETIME,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE categories (
+    id INT NOT NULL AUTO_INCREMENT,
+    category VARCHAR(15),
     created_at DATETIME,
     updated_at DATETIME,
     PRIMARY KEY (id)

@@ -12,8 +12,8 @@
             "host": "localhost",
             "pathMappings": [
                 {
-                    "localRoot": "${workspaceFolder}/code",
-                    "remoteRoot": "/code"
+                    "localRoot": "${workspaceFolder}/app",
+                    "remoteRoot": "/worder/app"
                 }
             ]
         }

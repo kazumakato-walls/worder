@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.8"
 
 services:
   # MySQL
@@ -19,8 +19,8 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./docker/mysql/initdb.d:/docker-entrypoint-initdb.d # 定義どおりにテーブル作成
       - ./docker/mysql/conf.d:/etc/mysql/conf.d # MySQLの基本設定(文字化け対策)
+      - ./docker/mysql/initdb.d:/docker-entrypoint-initdb.d # 定義どおりにテーブル作成
       - ./log/mysql:/var/log/mysql # ログの保存
     networks:
       - local-net
@@ -34,15 +34,16 @@ services:
     # path配下のDockerfile読み込み
     build: 
       context: ./docker/api
-      dockerfile: ./debug.Dockerfile    
+      dockerfile: ./debug.Dockerfile
+    restart: always
+    volumes:
+      - ./app:/worder/app
     expose:
       - "8080"
       - "5678"
     ports:
       - "8080:8080"
       - "5678:5678"
-    volumes:
-      - ./code:/usr/src/server
     networks:
       - local-net
 

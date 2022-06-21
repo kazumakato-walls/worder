@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # モデルの定義
-from sqlalchemy import Column, Integer, String, Boolean,text
+from sqlalchemy import Column, Integer, String, Integer,text
 from sqlalchemy.dialects.mysql import TIMESTAMP as Timestamp
 from pydantic import BaseModel
 from db import Base
@@ -24,11 +24,13 @@ class User(BaseModel):
 # Worder ################################################################
 # メニューテーブルのモデル定義
 class MenuTable(Base):
-    __tablename__ = 'menu'
+    __tablename__ = 'menus'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    food = Column(String(30), nullable=False)
+    category_id = Column(Integer, nullable=False)    
+    menu = Column(String(30), nullable=False)
     price = Column(Integer, nullable=False)
-    visible_flg = Column(Boolean, nullable=False)
+    view_no = Column(Integer, nullable=False)
+    visible_st = Column(Integer, nullable=False)
     created_at = Column(Timestamp, nullable=False,server_default=text('current_timestamp'))
     updated_at = Column(Timestamp, nullable=False,server_default=text('current_timestamp on update current_timestamp'))
 
@@ -36,32 +38,52 @@ class MenuTable(Base):
 # POSTやPUTのとき受け取るRequest Bodyのモデルを定義
 class Menu(BaseModel):
     id: int
-    food:str
-    price: int 
-    visible_flg: bool
+    category_id: int
+    menu:str
+    price: int
+    view_no: int    
+    visible_st: int
     created_at: str
     updated_at:str
 
 # 注文テーブルのモデル定義
 class OrderTable(Base):
-    __tablename__ = 'order'
+    __tablename__ = 'orders'
     id = Column(Integer, primary_key=True, autoincrement=True)
     menu_id = Column(Integer, nullable=False)
     seat = Column(String(6), nullable=False)    
-    delivery_flg = Column(Integer, nullable=False)
-    bill_flg = Column(Boolean, nullable=False)
+    price = Column(Integer, nullable=False)
+    order_st = Column(Integer, nullable=False)
+    bill_st = Column(Integer, nullable=False)
     created_at = Column(Timestamp, nullable=False,server_default=text('current_timestamp'))
     updated_at = Column(Timestamp, nullable=False,server_default=text('current_timestamp on update current_timestamp'))
     
 # POSTやPUTのとき受け取るRequest Bodyのモデルを定義
 class Order(BaseModel):
     id: int
+    menu_id: int    
     seat:str
-    menu_id: int 
-    delivery_flg: int
-    bill_flg: bool
+    price: int
+    order_st: int
+    bill_st: int
     created_at: str
     updated_at: str
+    
+class CategoryTable(Base):
+    __tablename__ = 'categories'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    category = Column(String(15), nullable=False)
+    created_at = Column(Timestamp, nullable=False,server_default=text('current_timestamp'))
+    updated_at = Column(Timestamp, nullable=False,server_default=text('current_timestamp on update current_timestamp'))
+    
+# POSTやPUTのとき受け取るRequest Bodyのモデルを定義
+class Category(BaseModel):
+    id: int
+    category: str
+    created_at: str
+    updated_at: str
+    
+    
     
 def main():
     # テーブルが存在しなければ、テーブルを作成

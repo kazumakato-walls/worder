@@ -9,7 +9,7 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 user_name = "user"
 password = "password"
 host = "db"  # docker-composeで定義したMySQLのサービス名
-database_name = "woder"
+database_name = "worder"
 
 DATABASE = f'mysql://%s:%s@%s/%s?charset=utf8mb4' % (
     user_name,

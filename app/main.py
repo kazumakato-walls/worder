@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from typing import List  # ネストされたBodyを定義するために必要
 from starlette.middleware.cors import CORSMiddleware  # CORSを回避するために必要
 from db import session  # DBと接続するためのセッション
-from model import UserTable, User  # 今回使うモデルをインポート
+from model import UserTable, User, MenuTable, OrderTable, CategoryTable  # 今回使うモデルをインポート
 
 app = FastAPI()
 
@@ -51,3 +51,81 @@ async def update_users(users: List[User]):
         user.name = new_user.name
         user.age = new_user.age
         session.commit()
+
+# ----------WorderAPIの定義------------
+# メニューリストを取得 GET
+@app.get("/menus")
+async def read_menus():
+    menus = session.query(MenuTable).all()
+    return menus
+
+# メニュー追加
+@app.put("/menus")
+async def create_menu(category_id: int, menu: str, price: int, view_no: int):
+    menus = MenuTable()
+    menus.category_id = category_id
+    menus.menu = menu
+    menus.price = price
+    menus.view_no = view_no
+    session.add(menus)
+    session.commit()
+
+# メニュー編集
+@app.post("/menus")
+async def create_menu(id:int, category_id: int, menu: str, price: int, view_no: int):
+    menus = session.query(MenuTable).filter(MenuTable.id == id).first()
+    menus.category_id = category_id
+    menus.menu = menu
+    menus.price = price
+    menus.view_no = view_no
+    session.commit()
+
+# 注文情報
+@app.get("/orders")
+async def read_orders():
+    orders = session.query(OrderTable).all()
+    return orders
+
+# 注文情報　テーブル毎に取得
+@app.get("/orders")
+async def read_orders():
+    orders = session.query(OrderTable).all()
+    return orders
+
+# 注文追加
+@app.put("/orders")
+async def create_menu(category_id: int, menu: str, price: int, view_no: int):
+    menus = MenuTable()
+    menus.category_id = category_id
+    menus.menu = menu
+    menus.price = price
+    menus.view_no = view_no
+    session.add(menus)
+    session.commit()
+
+# 注文状況編集
+@app.post("/orders")
+async def create_menu(id:int, category_id: int, menu: str, price: int, view_no: int):
+    menus = session.query(MenuTable).filter(MenuTable.id == id).first()
+    menus.category_id = category_id
+    menus.menu = menu
+    menus.price = price
+    menus.view_no = view_no
+    session.commit()
+
+# 会計完了
+@app.post("/orders")
+async def create_menu(id:int, category_id: int, menu: str, price: int, view_no: int):
+    menus = session.query(MenuTable).filter(MenuTable.id == id).first()
+    menus.category_id = category_id
+    menus.menu = menu
+    menus.price = price
+    menus.view_no = view_no
+    session.commit()
+
+@app.get("/categories")
+async def read_categories():
+    categories = session.query(CategoryTable).all()
+    return categories
+
+

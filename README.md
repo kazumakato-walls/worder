@@ -26,6 +26,7 @@ $ mysql -u user -h 127.0.0.1 -D worder -p
 $ password
 $ show databases;
 
+$ show variables like "char%";
 ## ex) GET
 ```
 $ curl -X GET "http://localhost:8000/users" -H "accept: application/json"
@@ -53,3 +54,8 @@ Result
 ```
 [{"id":1,"age":15,"name":"太郎"},{"id":2,"age":13,"name":"次郎"},{"id":3,"age":20,"name":"花子"},{"id":4,"age":10,"name":"士郎"}]
 ```
+$メニューの追加　put
+http://localhost:8000/menus?category_id=1&menu=ピザ&price=1200&view_no=10
+
+$メニューの編集　post
+http://localhost:8000/menus?id=1&category_id=1&menu=やきそば&price=1100&view_no=99
