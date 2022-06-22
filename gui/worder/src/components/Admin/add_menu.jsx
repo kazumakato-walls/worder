@@ -1,7 +1,9 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
+import { Button } from '@mui/material';
 import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
+
 import Header from '../Common/header';
 
 const style = {
@@ -17,13 +19,19 @@ function AddMenu() {
     console.log('acceptedFiles:', acceptedFiles);
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
-
+  
+  const InsertMenu = () => {
+    console.log('testaa')
+    
+  }
   return (
     <>
       <Header />
       <h2>メニューの追加 </h2>
       <div><TextField id="outlined-basic" label="メニュー" variant="outlined" /></div>
       <div><TextField id="filled-basic" label="金額" variant="filled" /></div>
+      <div><Button /></div>
+
       <div {...getRootProps()} style={style}>
         <input {...getInputProps()} />
         {
@@ -32,6 +40,7 @@ function AddMenu() {
             <p>ここに画像をドラッグ＆ドロップ</p>
         }
       </div>
+      <div><Button variant="solid" onClick={InsertMenu}>登録</Button></div>
     </>
   )
 }
