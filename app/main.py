@@ -4,6 +4,8 @@ from starlette.middleware.cors import CORSMiddleware  # CORSを回避するた�
 from db import session  # DBと接続するためのセッション
 from model import UserTable, User, MenuTable, OrderTable, CategoryTable  # 今回使うモデルをインポート
 
+import datetime
+
 app = FastAPI()
 
 # CORSを回避するために設定
@@ -62,70 +64,113 @@ async def read_menus():
 # メニュー追加
 @app.put("/menus")
 async def create_menu(category_id: int, menu: str, price: int, view_no: int):
+    t_delta = datetime.timedelta(hours=9)
+    JST = datetime.timezone(t_delta, 'JST') 
     menus = MenuTable()
     menus.category_id = category_id
     menus.menu = menu
     menus.price = price
     menus.view_no = view_no
+    menus.created_at = datetime.datetime.now(JST)
+    menus.updated_at = datetime.datetime.now(JST)
     session.add(menus)
     session.commit()
 
 # メニュー編集
 @app.post("/menus")
 async def create_menu(id:int, category_id: int, menu: str, price: int, view_no: int):
+    t_delta = datetime.timedelta(hours=9)
+    JST = datetime.timezone(t_delta, 'JST') 
     menus = session.query(MenuTable).filter(MenuTable.id == id).first()
     menus.category_id = category_id
     menus.menu = menu
     menus.price = price
     menus.view_no = view_no
+    menus.updated_at = datetime.datetime.now(JST)    
     session.commit()
 
 # 注文情報
 @app.get("/orders")
 async def read_orders():
-    orders = session.query(OrderTable).all()
+    orders = session.query(OrderTable.id,
+                           OrderTable.menu_id,
+                           OrderTable.seat,
+                           OrderTable.price,
+                           OrderTable.order_st,
+                           OrderTable.bill_st,
+                           OrderTable.created_at,
+                           MenuTable.menu)\
+    .join(OrderTable, MenuTable.id == OrderTable.menu_id)\
+    .all()
     return orders
 
 # 注文情報　テーブル毎に取得
-@app.get("/orders")
-async def read_orders():
-    orders = session.query(OrderTable).all()
+@app.get("/orders/{seat}")
+async def read_orders(seat: str):
+    orders = session.query(OrderTable.id,
+                           OrderTable.menu_id,
+                           OrderTable.seat,
+                           OrderTable.price,
+                           OrderTable.order_st,
+                           OrderTable.bill_st,
+                           OrderTable.created_at,
+                           MenuTable.menu)\
+    .filter(OrderTable.seat == seat)\
+    .join(OrderTable, MenuTable.id == OrderTable.menu_id)\
+    .all()
     return orders
 
 # 注文追加
 @app.put("/orders")
-async def create_menu(category_id: int, menu: str, price: int, view_no: int):
-    menus = MenuTable()
-    menus.category_id = category_id
-    menus.menu = menu
-    menus.price = price
-    menus.view_no = view_no
-    session.add(menus)
+async def create_menu(menu_id: int, price: int, seat: str):
+    t_delta = datetime.timedelta(hours=9)
+    JST = datetime.timezone(t_delta, 'JST') 
+    orders = OrderTable()
+    orders.menu_id = menu_id
+    orders.price = price
+    orders.seat = seat
+    orders.order_st = 0
+    orders.bill_st = 0
+    orders.created_at = datetime.datetime.now(JST)
+    orders.updated_at = datetime.datetime.now(JST)
+    session.add(orders)
     session.commit()
 
-# 注文状況編集
+#料理提供、注文キャンセル時の処理
 @app.post("/orders")
-async def create_menu(id:int, category_id: int, menu: str, price: int, view_no: int):
-    menus = session.query(MenuTable).filter(MenuTable.id == id).first()
-    menus.category_id = category_id
-    menus.menu = menu
-    menus.price = price
-    menus.view_no = view_no
+async def create_menu(id:int, order_st: int):
+    t_delta = datetime.timedelta(hours=9)
+    JST = datetime.timezone(t_delta, 'JST') 
+    orders = session.query(OrderTable).filter(OrderTable.id == id).first()
+    orders.order_st = order_st
+    orders.updated_at = datetime.datetime.now(JST)
     session.commit()
 
-# 会計完了
-@app.post("/orders")
-async def create_menu(id:int, category_id: int, menu: str, price: int, view_no: int):
-    menus = session.query(MenuTable).filter(MenuTable.id == id).first()
-    menus.category_id = category_id
-    menus.menu = menu
-    menus.price = price
-    menus.view_no = view_no
+# 会計時の処理
+@app.post("/order_bill")
+async def create_menu(seat: int, bill_st: int):
+    t_delta = datetime.timedelta(hours=9)
+    JST = datetime.timezone(t_delta, 'JST') 
+    orders = session.query(OrderTable).filter(OrderTable.seat == seat).all()
+    orders.bill_st = bill_st
+    orders.updated_at = datetime.datetime.now(JST)
     session.commit()
 
+#  カテゴリ一覧取得
 @app.get("/categories")
 async def read_categories():
     categories = session.query(CategoryTable).all()
     return categories
 
+#  カテゴリ追加
+@app.put("/categories")
+async def read_categories(category: str):
+    t_delta = datetime.timedelta(hours=9)
+    JST = datetime.timezone(t_delta, 'JST') 
+    categories = CategoryTable()
+    categories.category = category
+    categories.created_at = datetime.datetime.now(JST)
+    categories.updated_at = datetime.datetime.now(JST)
+    session.add(categories)
+    session.commit()
 
