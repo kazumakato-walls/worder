@@ -1,11 +1,11 @@
-import * as React from 'react';
+// import * as React from 'react';
 
-function test() {
-    return (
-        <div>
-            ppfjasofmapskvm
-        </div>
-    )
-}
+// function test() {
+//     return (
+//         <div>
+//             ppfjasofmapskvm
+//         </div>
+//     )
+// }
 
-export default test
+// export default test
