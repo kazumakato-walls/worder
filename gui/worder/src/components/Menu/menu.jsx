@@ -1,90 +1,54 @@
 import * as React from 'react';
+import { useState, useEffect } from "react";
 import Header from '../Common/header';
+import Button from '@mui/material/Button';
+import axios from "axios";
+import MUIDataTable from "mui-datatables";
 
-//グリッドで分けている部分
-import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
+function About() {
+  const baseURL = "http://127.0.0.1:8000";
+  const [menuData, setMenusData] = useState([])
+  const [columns, setColumns] = useState()
 
-// import MenuCard from './MenuCard';
+  useEffect(() => {
+    setColumns([
+      { label: '料理名', name: 'menu' },
+      { label: '値段', name: 'price' },
+      { label: '表示flg', name: 'visible_flg' },
+      { label: 'カテゴリID', name: 'category_id' }
+    ])
+    GetMenus()
+  }, [])
 
-//カード部分
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import { CardActionArea } from '@mui/material';
-import image from './curry.jpg'
-import image1 from './cat.png'
+  const GetMenus = () => {
+    axios.get(baseURL + '/menus').then(res => {
+      setMenusData(res.data)
+      console.log(menuData)
+    })
+  }
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
-
-function menu() {
+  const options = {
+    selectableRowsHeader: false,
+    selectableRowsHideCheckboxes: true,
+    search: false,
+    download: false,
+    print: false,
+    viewColumns: false,
+    filter: false,
+    sort: false
+  }
 
   return (
     <>
       <Header />
-      <h2>Menu</h2>
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={4}>
-          <Grid item xs={3}>
-            <Item>
-              <Card sx={{ maxWidth: 500 }}>
-                <CardActionArea>
-                  <CardMedia
-                    component="img"
-                    height="140"
-                    image={image}
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                      カレー
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      説明文：テストテストテスト
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Item>
-          </Grid>
-          <Grid item xs={3}>
-            <Item>
-              <Card sx={{ maxWidth: 500 }}>
-                <CardActionArea>
-                  <CardMedia
-                    component="img"
-                    height="140"
-                    image={image1}
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                      猫
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      説明文：猫
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Item>
-          </Grid>
-          <Grid item xs={3}>
-            <Item>xs=3</Item>
-          </Grid>
-          <Grid item xs={3}>
-            <Item>xs=3</Item>
-          </Grid>
-        </Grid>
-      </Box>
+      <MUIDataTable
+        title=""
+        data={menuData}
+        columns={columns}
+        options={options}
+      />
     </>
   )
 }
-export default menu;
+
+export default About;
