@@ -14,7 +14,7 @@ function About() {
     setColumns([
       { label: '料理名', name: 'menu' },
       { label: '値段', name: 'price' },
-      { label: '表示flg', name: 'visible_flg' },
+      { label: '表示flg', name: 'visible_st' },
       { label: 'カテゴリID', name: 'category_id' }
     ])
     GetMenus()
@@ -35,18 +35,21 @@ function About() {
     print: false,
     viewColumns: false,
     filter: false,
-    sort: false
+    sort: false,
+    pagination: false
   }
 
   return (
     <>
       <Header />
-      <MUIDataTable
-        title=""
-        data={menuData}
-        columns={columns}
-        options={options}
-      />
+      <div style={{ textAlign:"left", width: "100%" }}>
+        <MUIDataTable
+          title="Menu"
+          data={menuData}
+          columns={columns}
+          options={options}
+        />
+      </div>
     </>
   )
 }

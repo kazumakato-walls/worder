@@ -86,7 +86,9 @@ function About() {
     print: false,
     viewColumns: false,
     filter: false,
-    sort: false
+    sort: false,
+    pagination: false
+
   }
 
   return (
