@@ -101,6 +101,7 @@ async def read_orders():
                            OrderTable.created_at,
                            MenuTable.menu)\
     .join(OrderTable, MenuTable.id == OrderTable.menu_id)\
+    .filter(OrderTable.order_st == 0)\
     .all()
     return orders
 
@@ -122,7 +123,7 @@ async def read_orders(seat: str):
 
 # 注文追加
 @app.put("/orders")
-async def create_menu(menu_id: int, price: int, seat: str):
+async def create_order(menu_id: int, price: int, seat: str):
     t_delta = datetime.timedelta(hours=9)
     JST = datetime.timezone(t_delta, 'JST') 
     orders = OrderTable()
@@ -138,7 +139,7 @@ async def create_menu(menu_id: int, price: int, seat: str):
 
 #料理提供、注文キャンセル時の処理
 @app.post("/orders")
-async def create_menu(id:int, order_st: int):
+async def update_order(id:int, order_st: int):
     t_delta = datetime.timedelta(hours=9)
     JST = datetime.timezone(t_delta, 'JST') 
     orders = session.query(OrderTable).filter(OrderTable.id == id).first()
@@ -148,7 +149,7 @@ async def create_menu(id:int, order_st: int):
 
 # 会計時の処理
 @app.post("/order_bill")
-async def create_menu(seat: int, bill_st: int):
+async def bill_orders(seat: int, bill_st: int):
     t_delta = datetime.timedelta(hours=9)
     JST = datetime.timezone(t_delta, 'JST') 
     orders = session.query(OrderTable).filter(OrderTable.seat == seat).all()

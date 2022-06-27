@@ -1,8 +1,10 @@
 import * as React from 'react';
+import { useState, useEffect } from "react";
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
 import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
+import axios from "axios";
 
 import Header from '../Common/header';
 
@@ -13,7 +15,11 @@ const style = {
 };
 
 function AddMenu() {
-
+  const baseURL = "http://127.0.0.1:8000";
+  const [Category, setCategory] = useState('')
+  const [menu, setMenu] = useState('')
+  const [price, setPrice] = useState('')
+  const [view_no, setView_no] = useState('')  
   const onDrop = useCallback((acceptedFiles) => {
     // Do something with the files
     console.log('acceptedFiles:', acceptedFiles);
@@ -21,15 +27,26 @@ function AddMenu() {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   
   const InsertMenu = () => {
-    console.log('testaa')
-    
+    console.log(menu)
+    console.log(price)    
+    axios.put(baseURL + '/menus?category_id=' + Category
+                        + '&menu=' + menu
+                        + '&price=' + price
+                        + '&view_no=' + view_no).then(res =>{
+                          if (res.status == 200) {
+                            console.log('ステータス:200')
+                          }
+    })
   }
+
   return (
     <>
       <Header />
       <h2>メニューの追加 </h2>
-      <div><TextField id="outlined-basic" label="メニュー" variant="outlined" /></div>
-      <div><TextField id="filled-basic" label="金額" variant="filled" /></div>
+      <div><TextField id="outlined-basic" label="カテゴリーID" variant="outlined" onChange={(event) => setCategory(event.target.value)}/></div>
+      <div><TextField id="outlined-basic" label="メニュー" variant="outlined" onChange={(event) => setMenu(event.target.value)}/></div>
+      <div><TextField id="outlined-basic" label="金額" variant="outlined" onChange={(event) => setPrice(event.target.value)}/></div>
+      <div><TextField id="outlined-basic" label="順番" variant="outlined" onChange={(event) => setView_no(event.target.value)}/></div>
       <div><Button /></div>
 
       <div {...getRootProps()} style={style}>
